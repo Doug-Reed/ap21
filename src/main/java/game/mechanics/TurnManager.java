@@ -3,8 +3,10 @@ package game.mechanics;
 import java.util.ArrayList;
 
 import game.players.Player;
-
+import org.apache.log4j.Logger;
 public class TurnManager{
+    final static Logger log = Logger.getLogger(TurnManager.class);
+
     private ArrayList<Player> playersIn;
     int index = 0;
     private ArrayList<Player> busted;
@@ -13,6 +15,8 @@ public class TurnManager{
     public TurnManager(Table t) {
         allPlayed = false;
         playersIn = t.getPlayers();
+       log.debug(playersIn.size() + " players");
+       busted = new ArrayList<Player>();
     }
 
     public void bustPlayer(Player p) {
@@ -24,9 +28,15 @@ public class TurnManager{
     }
 
     public Player getNextPlayer(){
+        log.debug("Get next Player index = " + index );
         Player next = null;
+        if(playersIn.size()==0){
+            allPlayed = true;
+            return null;
+        }
         while(next == null){
-            if(index > playersIn.size()) {
+            log.debug("playersIn.size() = " + playersIn.size() + " index = " + index);
+            if(index >= playersIn.size()) {
                 allPlayed = true;
                 return null;
             }
@@ -36,6 +46,7 @@ public class TurnManager{
             
             index++;
         }
+        log.debug("next = " + next.toString());
         return next;
     }
 

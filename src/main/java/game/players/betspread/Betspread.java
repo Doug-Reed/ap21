@@ -1,7 +1,9 @@
 package game.players.betspread;
 import game.players.betspread.Bet;
+import org.apache.log4j.Logger;
 
 public abstract class Betspread {
+    final static Logger log = Logger.getLogger(Betspread.class);
     private Bet dThree;
     private Bet dTwo;
     private Bet dOne;

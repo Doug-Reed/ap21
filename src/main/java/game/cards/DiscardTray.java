@@ -2,8 +2,10 @@ package game.cards;
 
 import game.players.CountingSystem;
 import java.util.ArrayList;
+import org.apache.log4j.Logger;
 
 public class DiscardTray {
+    final static Logger log = Logger.getLogger(DiscardTray.class);
     private int numberOfDecks = 0;
     private CountingSystem countingSystem;
     private ArrayList<Card> discarded = new ArrayList<Card>();
@@ -46,6 +48,7 @@ public class DiscardTray {
     }
 
     public int trueCount() {
+        log.debug("Calculating TC");
         int discardSize = discarded.size();
         if(discardSize ==0) {discardSize++;}
         double decksDiscardedExact = discardSize/ 52;
@@ -55,7 +58,7 @@ public class DiscardTray {
         double rawDivide = runningCount()/decksDiscardedFloored;
 
         int returnVal = (int) rawDivide;
-
+         log.debug("TC = " + returnVal);
         return returnVal;
     }
 

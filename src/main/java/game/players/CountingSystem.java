@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import game.cards.Card;
 
+
 public abstract class CountingSystem {
 
     private int A = -1;

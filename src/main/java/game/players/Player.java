@@ -3,12 +3,18 @@ package game.players;
 import java.util.ArrayList;
 
 import game.cards.Hand;
+import game.players.betspread.Betspread;
+import game.players.betspread.TenDollarSpread;
+import game.players.betspread.Bet;
+
+import org.apache.log4j.Logger;
 
 public class Player {
+    final static Logger log = Logger.getLogger(Player.class);
     private String name;
     private double bankroll = 10000;
     private CountingSystem countingSystem = new HiLo();
-    private BetCalculator betCalculator = new BetCalculator();
+    private Betspread betspread = new TenDollarSpread();
 
     public ArrayList<Hand> hands = new ArrayList<Hand>();
     public ArrayList<Hand> getHands(){
@@ -20,15 +26,14 @@ public class Player {
         hands = new ArrayList<Hand>();
         return discards;
     }
-    public void nextRound(int trueCount){
-        
-        game.players.betspread.Bet bet = betCalculator.calculateBet(trueCount);
-        hands = new ArrayList<Hand>(bet.getNumberOfSpots());
-    }
 
     public void changeBankroll(double winnings) {
         bankroll += winnings;
     }
+
+  public String toString() {
+      return this.name + " bankroll= " + this.bankroll;
+  }
 
     public void split(Hand h) {
         game.cards.Card c = h.getSplit();
@@ -36,8 +41,15 @@ public class Player {
         newHand.addToHand(c, false);
         hands.add(newHand);
     }
-    public int placeBet() {
-        return 0;
+    public void startRound(int trueCount) {
+      hands = new ArrayList<Hand>();
+      Bet bet = betspread.getBet(trueCount);
+      for (int i = 0; i >= bet.getNumberOfSpots();i++){
+          Hand h = new Hand();
+          h.setBet(bet.getBetAmount());
+          hands.add(h);
+          this.bankroll = bankroll- bet.getBetAmount();
+      }
     }
 
     public int placeSideBet() {
